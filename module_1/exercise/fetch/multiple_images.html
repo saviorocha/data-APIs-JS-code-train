@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Multiple images</title>
+</head>
+<body>
+    <img src="" id="aqua1.jpg" width=200>
+    <img src="" id="aqua2.jpg" width=200>
+    <img src="" id="aqua3.png" width=200>
+
+    <script>
+        const imgs = ['aqua1.jpg', 'aqua2.jpg', 'aqua3.png'];
+        const body = document.querySelector('body');
+
+        for (let i = 0; i < imgs.length; i++) {
+            fetchImgs(imgs[i])
+            .then(response => {
+                console.log('Done!');
+            })
+            .catch(err => {
+                console.log('Error!');
+                console.error(err);
+            });
+        }
+
+        async function fetchImgs(img) {
+            const response = await fetch(img);
+            const blob = await response.blob();
+            document.getElementById(img).src = URL.createObjectURL(blob);
+        }
+    </script>
+</body>
+</html>

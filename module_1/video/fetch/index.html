@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en" nighteye="disabled">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Code Train: Data/APIs 1</title>
+</head>
+<body>
+    <img src="" id="rainbow">
+    <script>
+        console.log('about to fetch a rainbow :)');
+        
+        rainbowResponse()
+        .then(response => {
+            console.log('Done!');
+        })
+        .catch(err => {
+            console.log('Error!');
+            console.error(err);
+        });
+
+        async function rainbowResponse() {
+            const response = await fetch('rainbow.jpg');
+            const blob = await response.blob();
+            document.getElementById('rainbow').src = URL.createObjectURL(blob);
+        }
+
+
+
+        // fetch('rainbow.jpg').then(response => {
+        //     console.log(response);
+        //     return response.blob();
+        // }).then(blob => {
+        //     console.log(blob);
+        //     document.getElementById('rainbow').src = URL.createObjectURL(blob);
+        // }).catch(err => {
+        //     console.log('Error!');
+        //     console.error(err);
+        // });
+    </script>
+</body>
+</html>
