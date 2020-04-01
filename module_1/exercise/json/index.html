@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" nighteye="disabled">
 
 <head>
   <meta charset="UTF-8" />
@@ -20,24 +20,18 @@
   <h1>Where is the ISS?</h1>
 
   <p class="latlon">
-    Latitude <span id="lat"></span><br />
-    Longitude <span id="lon"></span>
+    Latitude <span id="lat"></span>&deg;<br/>
+    Longitude <span id="lon"></span>&deg;
   </p>
   <div id="issMap"></div>
 
   <script>
-    let midX = window.innerWidth / 2;
-    let midY = window.innerHeight / 2;
-
-    // setTimeout(function(){ mymap.invalidateSize()}, 400);
 
     const attribution =
       '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors';
     const tileUrl = "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png";
     const tiles = L.tileLayer(tileUrl, { attribution });
-
-
-
+    
     const mymap = L.map("issMap").setView([0, 0], 3);
 
     tiles.addTo(mymap);
@@ -46,32 +40,34 @@
       iconSize: [50, 32],
       iconAnchor: [25, 16]
     });
-    const marker = L.marker([0, 0], { icon: issIcon }).addTo(mymap);
-
+    
     let popup = L.popup()
-      .setLatLng([0, 0])
-      .setContent('')
-      .openOn(mymap);
-
+    .setLatLng([0, 0])
+    .setContent('')
+    .openOn(mymap);
+    
     const api_url = "https://api.wheretheiss.at/v1/satellites/25544";
+    const marker = L.marker([0, 0], { icon: issIcon }).addTo(mymap);
     async function getISS() {
       const response = await fetch(api_url);
       const data = await response.json();
       const { latitude, longitude, velocity } = data;
 
-      document.getElementById("lat").textContent = latitude;
-      document.getElementById("lon").textContent = longitude;
+      document.getElementById("lat").textContent = latitude.toFixed(3);
+      document.getElementById("lon").textContent = longitude.toFixed(3);
 
       marker.setLatLng([latitude, longitude]);
       popup
       .setLatLng([latitude, longitude])
-      .setContent(`<p>ISS Velocity: <span>${velocity} mph</span></p>`);
+      .setContent(`<p>ISS Velocity: <span>${velocity.toFixed(3)} mph</span></p>`);
       mymap.panTo(new L.LatLng(latitude, longitude));
 
       console.log(data.latitude);
       console.log(data.longitude);
     }
-
+    getISS();
+    
+    setInterval(getISS, 1000);
   </script>
 </body>
 

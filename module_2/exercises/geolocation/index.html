@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en" nighteye="disabled">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>3000 port listening</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.6.0/dist/leaflet.css"
+        integrity="sha512-xwE/Az9zrjBIphAcBb3F6JVqxf46+CDLwfLMHloNu6KEQCAWi6HcDUbeOfBIptF7tcCzusKFjFw2yuvEpDL9wQ=="
+        crossorigin="" />
+    <script src="https://unpkg.com/leaflet@1.6.0/dist/leaflet.js"
+        integrity="sha512-gZwIG9x3wUXg2hdXF6+rVkLF/0Vi9U8D2Ntg4Ga5I5BZpVkVxlJWbSQtXPSiUTtC0TjtGOmxa1AJPuV0CPthew=="
+        crossorigin=""></script>
+    <style>
+        #geoMap {
+            height: 400px;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>Data selfie app</h1>
+    <p>Latitude: <span id="lat"></span>&deg;</p>
+    <p>Longitude: <span id="lon"></span>&deg;</p>
+    <div id="geoMap"></div>
+    <script>
+        if ('geolocation' in navigator) {
+            console.log('geolocation available');
+            const attribution =
+                '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors';
+            const tileUrl = "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png";
+            const tiles = L.tileLayer(tileUrl, { attribution });
+
+            const geoMap = L.map("geoMap").setView([0, 0], 1);
+            tiles.addTo(geoMap);
+            let personIcon = L.icon({
+                iconUrl: "person-icon.png",
+                iconSize: [25, 32],
+                iconAnchor: [12.5, 16]
+            });
+
+            let firstTime = true;
+            const marker = L.marker([0, 0], { icon: personIcon }).addTo(geoMap);
+
+            navigator.geolocation.getCurrentPosition(position => {
+                let lat = position.coords.latitude;
+                let lon = position.coords.longitude;
+                marker.setLatLng([lat, lon]);
+                if (firstTime) {
+                    geoMap.setView([lat, lon], 5);
+                    firstTime = false;
+                }
+                document.getElementById("lat").textContent = lat.toFixed(3);
+                document.getElementById("lon").textContent = lon.toFixed(3);
+            });
+        } else {
+            console.log('geolocation not available');
+        }
+    </script>
+</body>
+
+</html>

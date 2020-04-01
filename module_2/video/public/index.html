@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" nighteye="disabled">
 
 <head>
     <meta charset="UTF-8">
@@ -9,12 +9,23 @@
 
 <body>
     <h1>Data selfie app</h1>
-    <p>
-        Lorem ipsum dolor sit amet, consectetur adipisicing elit.
-        Accusamus nisi velit neque ullam numquam quibusdam dolorem
-        deleniti quasi repellat, saepe quae fuga obcaecati labore
-        necessitatibus quam quidem molestias odio aut.
-    </p>
+    <p>Latitude: <span id="lat"></span>&deg;</p>
+    <p>Longitude: <span id="lon"></span>&deg;</p>
+
+    <script>
+        if ('geolocation' in navigator) {
+            console.log('geolocation available');
+            navigator.geolocation.getCurrentPosition(position => {
+                let lat = position.coords.latitude.toFixed(3);
+                let lon = position.coords.longitude.toFixed(3);
+                document.getElementById("lat").textContent = lat;
+                document.getElementById("lon").textContent = lon;
+            });
+
+        } else {
+            console.log('geolocation not available');
+        }
+    </script>
 </body>
 
 </html>
