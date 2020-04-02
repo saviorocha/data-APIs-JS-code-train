@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en" nighteye="disabled">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>3000 port listening</title>
+</head>
+
+<body>
+    <h1>Data selfie app</h1>
+    <p>Latitude: <span id="lat"></span>&deg;</p>
+    <p>Longitude: <span id="lon"></span>&deg;</p>
+
+    <script>
+        
+        if ('geolocation' in navigator) {
+            console.log('geolocation available');
+            navigator.geolocation.getCurrentPosition(async position => {                
+                let lat = position.coords.latitude.toFixed(3);
+                let lon = position.coords.longitude.toFixed(3);
+                document.getElementById("lat").textContent = lat;
+                document.getElementById("lon").textContent = lon;
+
+                const data = { lat, lon };
+                console.log(JSON.stringify(data));
+                const options = {
+                    method: 'post',
+                    headers: {
+                        'Content-type': 'application/json',
+                    },
+                    body: JSON.stringify(data)
+                };
+                const response = await fetch('/api', options);
+                const json = await response.json();
+                console.log(json);
+            });
+
+        } else {
+            console.log('geolocation not available');
+        }
+    </script>
+</body>
+
+</html>
